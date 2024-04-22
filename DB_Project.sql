@@ -15,6 +15,9 @@ Create TABLE Customer(
 
 Create TABLE Employee(
 	Employee_ID int  NOT NULL,
+    Fname varchar(20) NOT NULL,
+    Lname varchar(20) NOT NULL,
+    Gender char(2) NOT NULL,
 	Location_ID int NOT NULL,
     State varchar(20) NOT NULL,
     City varchar(20) NOT NULL,
@@ -27,7 +30,10 @@ Create TABLE Employee(
 Create TABLE Location(
 	Location_ID int NOT NULL,
     Address varchar(20) NOT NULL,
-    Phone_Number char(10) NOT NULL,
+    State varchar(20) NOT NULL,
+    City varchar (20) NOT NULL,
+    Zip_Code char (5) NOT NULL,
+	Phone_Number char(10) NOT NULL,
     Primary Key (Location_ID)
 );
 
@@ -84,6 +90,27 @@ insert into Customer values (245689,'F','girlyfin@gmail.com','Hannah','Fleaker',
 insert into Customer values (986532,'M','dMan@gmail.com','Danny','Phantom',2341236770,'543 CandyLane St');
 
 
+/* Employee values */
+insert into Employee values(246803,'Joey','Kelper','M',966376,'Texas','Dallas','262 Oakland St','Register Duty');
+insert into Employee values(369121,'Mable','Pines','F',255505,'Maine','Portland','532 Gravity Hills Dr','Stocker');
+insert into Employee values(708931,'Dipper','Pines','M',255505,'Maine','Portland','532 Gravity Hills Dr','Assistant store manager');
+
+
+/*Location values*/
+insert into Location values(255505,'255 Welshman St','Maine','Portland','97086','1236547658');
+insert into Location values(966376,'583 Mainland St','Texas','Dallas','75201','2349839021');
+
 Select *
 From Customer;
+
+Select *
+From Location;
+
+Select *
+From Employee;
+
+Delete from Employee;
+Delete from Location;
+
+
 
