@@ -8,3 +8,15 @@ The main objective of this project was to use an relational database schema, use
 
 ## Technologies Used:
 So Our Choice of relational database schema was <strong><em>MySQL</em></strong> and we are using <strong><em>Java Swing</em></strong> for the UI. 
+
+### More information over the database:
+We have a total of 7 tables in our database:
+<ol>
+  <li>Customer</li>
+  <li>Employee</li>
+  <li>Location</li>
+  <li>Products</li>
+  <li>Purchase_detail</li>
+  <li>Delivery</li>
+  <li>Checkout</li>
+</ol>
