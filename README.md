@@ -1,4 +1,10 @@
 # Grocery Store Management Database
-###### Created by Andrew Goss, Tanner Smith, Hayden Rawlings
+###### Created by Andrew Goss(001043951), Tanner Smith(), Hayden Rawlings()
 
 ## The Main Objective
+The main objective of this project was to use an relational database schema, use Java, and use Java Gui to make a whole functional database that can take input from the UI and update, add or even delete data from the database. The basis of our project as the title of this README is called will be about a Grocery Store Managment Database. It will be able to track some customer's info which will be need to deliver their product to their address. We also have the information of our employees at the many locations which we also track. For the products that are delivered or purchased at the locations, are shared between locations and using the database can see the prices and quanity of stock we have to sell. Using thses tables in our database we can use our "delivery" system to have certain employees at each location to deliver products to customers that wish to have their products delivered. 
+
+</br>
+
+## Technologies Used:
+So Our Choice of relational database schema was <strong><em>MySQL</em></strong> and we are using <strong><em>Java Swing</em></strong> for the UI. 
