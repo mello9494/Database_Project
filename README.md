@@ -2,12 +2,25 @@
 ###### Created by Andrew Goss(001043951), Tanner Smith(), Hayden Rawlings()
 
 ## The Main Objective
-The main objective of this project was to use an relational database schema, use Java, and use Java Gui to make a whole functional database that can take input from the UI and update, add or even delete data from the database. The basis of our project as the title of this README is called will be about a Grocery Store Managment Database. It will be able to track some customer's info which will be need to deliver their product to their address. We also have the information of our employees at the many locations which we also track. For the products that are delivered or purchased at the locations, are shared between locations and using the database can see the prices and quanity of stock we have to sell. Using thses tables in our database we can use our "delivery" system to have certain employees at each location to deliver products to customers that wish to have their products delivered. 
+The main objective of this project was to utilize an relational database schema, Java, and a Java GUI to make a 
+functional database that can perform basic create, read, update, and delete (CRUD) operations. 
+The basis of our project, as the title of this README is states, will be about a Grocery Store Management Database. 
+It will be able to track customer information which is used to deliver their product to their address. We also 
+have the information of our employees at multiple locations which we also track. The products that are delivered 
+or purchased at the locations are assumed to be shared between all locations. The database tracks the prices 
+and quantity of stock available. Using these tables in our database, we can use our "delivery" system to have 
+certain employees at each location deliver products to customers. 
 
-</br>
+<br>
 
 ## Technologies Used:
-So Our Choice of relational database schema was <strong><em>MySQL</em></strong> and we are using <strong><em>Java Swing</em></strong> for the UI. 
+Our relational database schema uses <strong><em>MySQL</em></strong>. Our UI elements are constructed using 
+<strong><em>Java Swing</em></strong>. The interface used to interact with our database with Java is 
+<strong><em>Java Database Connectivity (JDBC)</em></strong>.<br><br>
+
+In order to properly run this project, make sure you have the proper JDBC drivers installed in the same directory
+as this project. Here is a link to the MySQl JDBC driver downloads.<br>
+<a href="https://www.mysql.com/products/connector/">MySQL JDBC Drivers</a>
 
 ### More information over the database:
 We have a total of 7 tables in our database:
@@ -24,4 +37,4 @@ Below is the ER diagram which we created using MySQL software:<br>
 
 <img src="https://github.com/mello9494/Database_Project/assets/125573542/5e1a8a98-2de7-4160-9004-fc7d1b8f5dd9" alt="ER Diagram" width ="1000px" height="1000px">
 
-The ER diagram shows the relationship between each table with the foreign keys. 
+

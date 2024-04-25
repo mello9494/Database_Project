@@ -2,6 +2,7 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+Database_Project.iml
 
 ### Eclipse ###
 .apt_generated
