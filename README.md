@@ -21,5 +21,7 @@ We have a total of 7 tables in our database:
   <li>Checkout</li>
 </ol>
 Below is the ER diagram which we created using MySQL software:<br>
-![ER diagram](/College\DataBase/Project/ErDiagram.png)
 
+<img src="https://github.com/mello9494/Database_Project/assets/125573542/5e1a8a98-2de7-4160-9004-fc7d1b8f5dd9" alt="ER Diagram" width ="1000px" height="1000px">
+
+The ER diagram shows the relationship between each table with the foreign keys. 
