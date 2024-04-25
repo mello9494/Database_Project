@@ -20,3 +20,6 @@ We have a total of 7 tables in our database:
   <li>Delivery</li>
   <li>Checkout</li>
 </ol>
+Below is the ER diagram which we created using MySQL software:<br>
+![ER diagram](/College\DataBase/Project/ErDiagram.png)
+
