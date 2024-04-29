@@ -7,10 +7,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Objects;
+import java.util.*;
 
 public class GroceryStoreLayout extends JFrame{
     private JPanel frame;
@@ -50,17 +47,18 @@ public class GroceryStoreLayout extends JFrame{
     private JLabel selectIDText;
     private JLabel[] labels = {label1, label2, label3, label4, label5, label6, label7, label8, label9, label10};
     private JTextField[] textFields= {textField1, textField2, textField3, textField4, textField5, textField6, textField7, textField8, textField9, textField10};
-    private JDialog dialog = new JDialog(this, "");;
+    private JDialog dialog = new JDialog(this, "");
+    JLabel error = new JLabel();
 
     public Connection con;
     public ResultSet result;
     public Statement st;
 
     public String selectedID;
+    public String prevID;
     public int numColumns;
-    DefaultTableModel tableModel;
-    Dictionary<String, Integer> dataTypes = new Hashtable<>(); // data types of getColumnType returned numbers
-
+    public DefaultTableModel tableModel;
+    public Dictionary<String, Integer> dataTypes = new Hashtable<>(); // data types of getColumnType returned numbers
 
     GroceryStoreLayout(){
         setContentPane(frame);
@@ -70,6 +68,9 @@ public class GroceryStoreLayout extends JFrame{
         generateTable(); // generate table
         Table_Data.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         setID_selectorItems(); // set ID selector box
+
+        dialog.setSize(400, 100); // error message dialog box
+        dialog.setLocationRelativeTo(this);
 
         setTitle("Grocery Store");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -110,7 +111,7 @@ public class GroceryStoreLayout extends JFrame{
                         setTextFieldtext();
                     }
                 } catch (NullPointerException npe) { // will return an error when selecting the table
-                    System.out.println(' ');
+                    System.out.print(' ');
                 }
             }
         });
@@ -123,7 +124,6 @@ public class GroceryStoreLayout extends JFrame{
                 for (int i = 0; i < numColumns; i++) {
                     textFields[i].setText(tableModel.getValueAt(selectedRow, i).toString());
                 }
-
             }
         });
 
@@ -144,6 +144,7 @@ public class GroceryStoreLayout extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 createButton();
+                queryDb(con, "select * from " + table_selector.getSelectedItem());
                 generateTable();
             }
         });
@@ -153,6 +154,7 @@ public class GroceryStoreLayout extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateButton();
+                queryDb(con, "select * from " + table_selector.getSelectedItem());
                 generateTable();
             }
         });
@@ -162,6 +164,7 @@ public class GroceryStoreLayout extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteButton();
+                queryDb(con, "select * from " + table_selector.getSelectedItem());
                 generateTable();
             }
         });
@@ -257,7 +260,7 @@ public class GroceryStoreLayout extends JFrame{
     public void createButton(){
         try {
             // get table name
-            //get column names
+            // get column names
             StringBuilder statement = new StringBuilder("insert into $tablename values (");
             PreparedStatement newPreparedStatement;
             int columnType;
@@ -277,21 +280,37 @@ public class GroceryStoreLayout extends JFrame{
                     newPreparedStatement.setString(i, textFields[i - 1].getText());
                 }
                 else if(columnType == 4){ // int
-                    newPreparedStatement.setInt(i, Integer.parseInt(textFields[i - 1].getText()));
+                    try { // make sure the input is only numbers
+                        int temp = Integer.parseInt(textFields[i - 1].getText());
+                        newPreparedStatement.setInt(i, temp);
+                    } catch (NumberFormatException nfe) {
+                        dialog.setTitle("Numbers only");
+                        error.setText("Only numbers allowed for element " + result.getMetaData().getColumnName(i - 1));
+                        dialog.add(error);
+                        dialog.setVisible(true);
+                        return;
+                    }
                 }
-                else if(columnType == 6){ // float
-                    newPreparedStatement.setFloat(i, Float.parseFloat(textFields[i - 1].getText()));
+                else if(columnType == 7){ // float
+                    try { // make sure the input is only numbers
+                        float temp = Float.parseFloat(textFields[i - 1].getText());
+                        newPreparedStatement.setFloat(i, temp);
+                    } catch (NumberFormatException nfe) {
+                        dialog.setTitle("Numbers only");
+                        error.setText("Only numbers allowed for element " + result.getMetaData().getColumnName(i - 1));
+                        dialog.add(error);
+                        dialog.setVisible(true);
+                        return;
+                    }
                 }
             }
-            int rows = newPreparedStatement.executeUpdate();
-            if(rows > 0){
-                System.out.println("Add success!");
-            }
-
+            newPreparedStatement.executeUpdate();
+            dialog.setTitle("Success");
+            error.setText("Created Successfully");
+            dialog.add(error);
+            dialog.setVisible(true);
         } catch (SQLException e) {
-//            throw new RuntimeException(e);
-            // show popup window with correct error
-            errorMessageDialogBox("Too long", e);
+            SQLError(e);
         }
     }
 
@@ -300,7 +319,6 @@ public class GroceryStoreLayout extends JFrame{
             StringBuilder statement = new StringBuilder("update $tablename set ");
             PreparedStatement newPreparedStatement;
             int columnType;
-            int rows;
             String colName;
             for(int i = 0; i < numColumns; i++){ // add insert options for every column needed in table
                 colName = tableModel.getColumnName(i);
@@ -308,31 +326,50 @@ public class GroceryStoreLayout extends JFrame{
                 else{ statement.append(colName).append(" = ?, "); }
             }
 
-            statement.append("where ").append(tableModel.getColumnName(0)).append(" = ").append(tableModel.getValueAt(Table_Data.getSelectedRow(), 0)); // only update the selected row
+            statement.append(" where ").append(tableModel.getColumnName(0)).append(" = ").append(tableModel.getValueAt(Table_Data.getSelectedRow(), 0)).append(";"); // only update the selected row
             statement.replace(7, 17, table_selector.getSelectedItem().toString());
             newPreparedStatement = con.prepareStatement(statement.toString());
             queryDb(con, "select * from " + table_selector.getSelectedItem().toString()); // to get the column types
 
-            for(int i = 1; i <= numColumns; i++){
+            for(int i = 1; i <= numColumns; i++){ // replace the "?" with the proper values
                 columnType = result.getMetaData().getColumnType(i);
                 // get data type of table element
                 if(columnType == 1 || columnType == 12){ // char or varchar
                     newPreparedStatement.setString(i, textFields[i - 1].getText());
                 }
-                else if(columnType == 4){ // int
-                    newPreparedStatement.setInt(i, Integer.parseInt(textFields[i - 1].getText()));
+                else if(columnType == 4) { // int
+                    try { // make sure the input is only numbers
+                        int temp = Integer.parseInt(textFields[i - 1].getText());
+                        newPreparedStatement.setInt(i, temp);
+                    } catch (NumberFormatException nfe) {
+                        dialog.setTitle("Numbers only");
+                        error.setText("Only numbers allowed for element " + result.getMetaData().getColumnName(i - 1));
+                        System.out.println(result.getMetaData().getColumnName(i));
+                        dialog.add(error);
+                        dialog.setVisible(true);
+                        return;
+                    }
                 }
-                else if(columnType == 6){ // float
-                    newPreparedStatement.setFloat(i, Float.parseFloat(textFields[i - 1].getText()));
+                else if(columnType == 7){ // float
+                    try { // make sure the input is only numbers
+                        float temp = Float.parseFloat(textFields[i - 1].getText());
+                        newPreparedStatement.setFloat(i, temp);
+                    } catch (NumberFormatException nfe) {
+                        dialog.setTitle("Numbers only");
+                        error.setText("Only numbers allowed for element " + result.getMetaData().getColumnName(i - 1));
+                        dialog.add(error);
+                        dialog.setVisible(true);
+                        return;
+                    }
                 }
             }
-            rows = newPreparedStatement.executeUpdate();
-            if(rows > 0){
-                System.out.println("Update success!");
-            }
-            dialogBox("Updated Successfully");
+            newPreparedStatement.executeUpdate();
+            dialog.setTitle("Success");
+            error.setText("Updated Successfully");
+            dialog.add(error);
+            dialog.setVisible(true);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            SQLError(e);
         }
     }
 
@@ -340,29 +377,54 @@ public class GroceryStoreLayout extends JFrame{
         StringBuilder statement = new StringBuilder("delete from $tablename where ");
         PreparedStatement newPreparedStatement;
 
-        statement.replace(12, 22, table_selector.getSelectedItem().toString());
-        statement.append(tableModel.getColumnName(0)).append(" = ").append(tableModel.getValueAt(Table_Data.getSelectedRow(), 0)); // only delete the selected row
         try {
+            statement.replace(12, 22, table_selector.getSelectedItem().toString());
+            statement.append(tableModel.getColumnName(0)).append(" = ").append(tableModel.getValueAt(Table_Data.getSelectedRow(), 0)); // only delete the selected row
             newPreparedStatement = con.prepareStatement(statement.toString());
             newPreparedStatement.executeUpdate();
-            dialogBox("Deleted Successfully");
+            dialog.setTitle("Success");
+            error.setText("Deleted successfully.");
+            dialog.add(error);
+            dialog.setVisible(true);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (ArrayIndexOutOfBoundsException a) {
+            dialog.setTitle("Error");
+            error.setText("Please selecta row to delete.");
+            dialog.add(error);
+            dialog.setVisible(true);
         }
     }
 
-    public void dialogBox(String message){
-        dialog.setTitle("Success");
-        JLabel newLabel = new JLabel();
-        newLabel.setText(message);
-        dialog.setSize(300, 100);
-        dialog.setLocationRelativeTo(this);
-        dialog.add(newLabel);
+    public void SQLError(SQLException e){
+        // show popup window with correct error
+        String errorColumn = ""; // name of the column throwing the error
+        String relatedTable = ""; // name of the table the foreign key is referencing
+        switch (e.getErrorCode()) {
+            case 0: // missing data
+                dialog.setTitle("Null entry");
+                error.setText("Entries cannot be null.");
+                break;
+            case 1062: // duplicate primary key
+                dialog.setTitle("Duplicate primary key");
+                error.setText("ID must be unique.");
+                break;
+            case 1452: // foreign key error
+                dialog.setTitle("Foreign key constraint");
+                error.setText("No ID in " + relatedTable + " matches the data in " + errorColumn);
+                break;
+            case 1406: // input length too long
+                for (int i = 0; i < numColumns; i++) {
+                    if (e.getLocalizedMessage().toLowerCase().contains(tableModel.getColumnName(i).toLowerCase())) {
+                        errorColumn = tableModel.getColumnName(i);
+                        break;
+                    }
+                }
+                dialog.setTitle("Input too long");
+                error.setText("Data in " + errorColumn + " is too long.");
+        }
+        dialog.add(error);
         dialog.setVisible(true);
-    }
-
-    public void errorMessageDialogBox(String message, SQLException e){
-
     }
 
     public static void main(String[] args) {

@@ -37,4 +37,21 @@ Below is the ER diagram which we created using MySQL software:<br>
 
 <img src="https://github.com/mello9494/Database_Project/assets/125573542/5e1a8a98-2de7-4160-9004-fc7d1b8f5dd9" alt="ER Diagram" width ="1000px" height="1000px">
 
-
+## How to use:
+<ul>
+    <li>When you open the user interface, you will be presented with a table selector, and ID selector, 
+        a table showing the data in the currently selected table, text fields for editing each element
+        in the selected row, and "Create", "Update", and "Remove" buttons allowing for basic CRUD 
+        operations.</li>
+    <li>To edit a row in the table, either select an ID in the ID selector drop down or click a row in the
+        table to load the data into the text fields on the left of the window. Once you are ready, click 
+        the "Update" button to commit the new data to the database. If any information does not comply with
+        the database constraints, you will receive an error stating which elements needs to be fixed.</li>
+    <li>To add a new row to a table, enter new information into the text fields on the left of the window. 
+        Once you are ready, click "Create" to commit the data to the database. If any information does not 
+        comply with the database constraints, you will receive an error stating which elements needs to be fixed.</li>
+    <li>To delete a row in the table, either select the ID from the ID selector drop down or click a row in the
+        table to select the row. Click the "Remove" button to delete the row from the table. This will only delete
+        the data in the selected table and no other data in the rest of the database.</li>
+    <li>To clear the text fields, re-select the table name in the Table selector.</li>
+</ul>

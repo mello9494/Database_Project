@@ -3,7 +3,7 @@ CREATE DATABASE DB_Project;
 USE DB_Project;
 
 Create TABLE Customer(
-	Customer_ID int  NOT NULL,
+	Customer_ID int NOT NULL,
     Gender char(2) NOT NULL,
     Email varchar(20) NOT NULL,
     Fname varchar(20) NOT NULL,
@@ -41,7 +41,7 @@ Create TABLE Location(
 );
 
 Create TABLE Products(
-	Product_ID int  NOT NULL,
+	Product_ID int NOT NULL,
     Prod_Description varchar (100) NOT NULL,
     Quantity int (5) NOT NULL,
     primary key (Product_ID)
@@ -53,8 +53,8 @@ Create TABLE Purchase_detail(
     Product_ID int  NOT NULL,
     Product_Quantity int  NOT NULL,
     Product_Price float(6) NOT NULL,
-    Customer_ID int  NOT NULL,
-    Employee_ID int  NOT NULL,
+    Customer_ID int NOT NULL,
+    Employee_ID int NOT NULL,
     Primary Key (Transaction_ID),
     Foreign Key (Product_ID) REFERENCES Products(Product_ID),
     Foreign Key (Customer_ID) REFERENCES Customer(Customer_ID),
