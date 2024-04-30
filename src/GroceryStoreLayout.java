@@ -367,6 +367,11 @@ public class GroceryStoreLayout extends JFrame{
             dialog.setVisible(true);
         } catch (SQLException e) {
             SQLError(e);
+        } catch (ArrayIndexOutOfBoundsException aie) {
+            dialog.setTitle("Error");
+            error.setText("Please select a row to update.");
+            dialog.add(error);
+            dialog.setVisible(true);
         }
     }
 
@@ -407,6 +412,18 @@ public class GroceryStoreLayout extends JFrame{
                 error.setText("ID must be unique.");
                 break;
             case 1452: // foreign key error
+                for (int i = 0; i < numColumns; i++) {
+                    if (e.getLocalizedMessage().toLowerCase().contains(tableModel.getColumnName(i).toLowerCase())) {
+                        errorColumn = tableModel.getColumnName(i);
+                        break;
+                    }
+                }
+                for (int i = 0; i < 7; i++) {
+                    if (errorColumn.toLowerCase().contains(table_selector.getItemAt(i).toLowerCase())) {
+                        relatedTable = table_selector.getItemAt(i);
+                        break;
+                    }
+                }
                 dialog.setTitle("Foreign key constraint");
                 error.setText("No ID in " + relatedTable + " matches the data in " + errorColumn);
                 break;
