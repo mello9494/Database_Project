@@ -1,8 +1,7 @@
-import com.mysql.cj.xdevapi.Table;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.sql.ResultSet;
@@ -54,14 +53,11 @@ public class GroceryStoreLayout extends JFrame{
     public ResultSet result;
     public Statement st;
 
-    public String selectedID;
-    public String prevID;
     public int numColumns;
     public DefaultTableModel tableModel;
-    public Dictionary<String, Integer> dataTypes = new Hashtable<>(); // data types of getColumnType returned numbers
 
     GroceryStoreLayout(){
-        setContentPane(frame);
+//        System.out.println(frame.getWidth());
         makeConnection();
 
         queryDb(con, "select * from Customer"); // initial query to create table
@@ -72,6 +68,7 @@ public class GroceryStoreLayout extends JFrame{
         dialog.setSize(400, 100); // error message dialog box
         dialog.setLocationRelativeTo(this);
 
+        setContentPane(frame);
         setTitle("Grocery Store");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 800);
@@ -200,7 +197,7 @@ public class GroceryStoreLayout extends JFrame{
             String url = "jdbc:mysql://localhost:3306/DB_Project";
             String username = "root";
             String password = "dkvUs83Sk#4";
-
+//            Class.forName("mysql.connector.j");
             con = DriverManager.getConnection(url, username, password); // connect to the DB
             st = con.createStatement();
 
