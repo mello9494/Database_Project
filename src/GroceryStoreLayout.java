@@ -1,5 +1,3 @@
-
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
@@ -56,9 +54,8 @@ public class GroceryStoreLayout extends JFrame{
     public int numColumns;
     public DefaultTableModel tableModel;
 
-    GroceryStoreLayout(){
-//        System.out.println(frame.getWidth());
-        makeConnection();
+    GroceryStoreLayout(String url, String username, String password){
+        makeConnection(url, username, password);
 
         queryDb(con, "select * from Customer"); // initial query to create table
         generateTable(); // generate table
@@ -192,15 +189,10 @@ public class GroceryStoreLayout extends JFrame{
         }
     }
 
-    public void makeConnection(){
+    public void makeConnection(String url, String username, String password){
         try {
-            String url = "jdbc:mysql://localhost:3306/DB_Project";
-            String username = "root";
-            String password = "dkvUs83Sk#4";
-//            Class.forName("mysql.connector.j");
             con = DriverManager.getConnection(url, username, password); // connect to the DB
             st = con.createStatement();
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -442,6 +434,6 @@ public class GroceryStoreLayout extends JFrame{
     }
 
     public static void main(String[] args) {
-        new GroceryStoreLayout();
+        new GroceryStoreLayout(args[0], args[1], args[2]);
     }
 }
